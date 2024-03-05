@@ -145,6 +145,9 @@ table {
 }
 
 body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
   color: #fff;
   background: #252525;
   margin: 0;
