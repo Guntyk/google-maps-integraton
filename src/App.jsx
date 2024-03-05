@@ -1,19 +1,31 @@
-import { useMemo } from 'react';
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
-import Places from './components/Places';
-import ClubRegistration from './ClubRegistration';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import { useEffect, useState } from 'react';
+import { PlacesAutocomplete } from './PlacesAutocomplete';
 
-export default function Home() {
+export default function ClubRegistration() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY,
+    libraries: ['places'],
   });
 
-  if (!isLoaded) return <div>Loading...</div>;
-  return <Map />;
-}
+  const center = { lat: 49.4065, lng: 30.613 };
+  const [coords, setCoords] = useState(null);
 
-function Map() {
-  const center = useMemo(() => ({ lat: 50.4065, lng: 30.613 }), []);
+  useEffect(() => {
+    console.log(coords);
+  }, [coords]);
 
-  return <ClubRegistration />;
+  return isLoaded ? (
+    <main className='main'>
+      <section className='club-reg'>
+        <h1>Search</h1>
+        <PlacesAutocomplete placeholder='Address' setSelected={setCoords} />
+      </section>
+      <GoogleMap zoom={7} center={coords || center} mapContainerClassName='map-container'>
+        {coords && <Marker position={coords} />}
+      </GoogleMap>
+    </main>
+  ) : (
+    <div>Loading...</div>
+  );
 }

@@ -1,35 +1,7 @@
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-import { useState } from 'react';
 import { Combobox } from 'react-widgets';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
-import useOnclickOutside from 'react-cool-onclickoutside';
 
-export default function ClubRegistration() {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries: ['places'],
-  });
-
-  const [address, setAddress] = useState(null);
-
-  const fields = ['Country', 'Region', 'Town', 'Address'];
-
-  if (!isLoaded) return <div>Loading...</div>;
-
-  return (
-    <section className='club-reg'>
-      <h1>Register your club</h1>
-      <div className='inputs'>
-        {fields.map((field) => (
-          <PlacesAutocomplete placeholder={field} setSelected={setAddress} />
-        ))}
-      </div>
-      <GoogleMap />
-    </section>
-  );
-}
-
-const PlacesAutocomplete = ({ placeholder, setSelected }) => {
+export const PlacesAutocomplete = ({ placeholder, setSelected }) => {
   const {
     ready,
     value,
@@ -37,6 +9,8 @@ const PlacesAutocomplete = ({ placeholder, setSelected }) => {
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
+
+  console.log(data);
 
   const handleSelect = async (address) => {
     console.log(address);
@@ -47,6 +21,7 @@ const PlacesAutocomplete = ({ placeholder, setSelected }) => {
       placeId: address.place_id,
     });
     const { lat, lng } = await getLatLng(results[0]);
+    console.log(lat, lng);
     setSelected({ lat, lng });
   };
 
